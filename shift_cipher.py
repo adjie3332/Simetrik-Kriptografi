@@ -1,45 +1,35 @@
 # Description: Shift Cipher
 
-def shift_cipher(text, shift):
-    result = ""
-    # traverse plaintext
-    for i in range(len(text)):
-        char = text[i]
-        # jika karakter berada di antara huruf A dan Z
-        if char.isalpha():
-            # mengubah huruf menjadi angka ASCII
-            ascii_code = ord(char)
-            # menyesuaikan nilai ASCII sesuai dengan nilai shift
-            shifted_ascii_code = ascii_code + shift
-            # jika nilai ASCII setelah pergeseran melebihi 90 (huruf Z) 
-            # atau 122 (huruf z), geser ke kembali ke A atau a
-            if char.isupper():
-                if shifted_ascii_code > 90:
-                    shifted_ascii_code -= 26
-                elif shifted_ascii_code < 65:
-                    shifted_ascii_code += 26
-            else:
-                if shifted_ascii_code > 122:
-                    shifted_ascii_code -= 26
-                elif shifted_ascii_code < 97:
-                    shifted_ascii_code += 26
-            # mengubah kembali nilai ASCII menjadi huruf
-            shifted_char = chr(shifted_ascii_code)
-            result += shifted_char
-        else:
-            # jika karakter bukan huruf, langsung ditambahkan ke hasil
-            result += char
-    return result
+# Fungsi untuk mengenkripsi pesan dengan algoritma shift cipher
+def encrypt(message, key):
+    cipher = ''  # inisialisasi variabel cipher
+    for char in message:
+        if char.isalpha():  # jika karakter saat ini adalah alfabet
+            cipher += chr((ord(char) - 65 + key) % 26 + 65)  # tambahkan karakter yang telah dienkripsi ke variabel cipher
+        else:  # jika karakter saat ini bukan alfabet
+            cipher += char  # tambahkan karakter asli ke variabel cipher
+    return cipher
 
-# Driver code
+# Fungsi untuk mendekripsi pesan yang telah dienkripsi dengan algoritma shift cipher
+def decrypt(cipher, key):
+    message = ''  # inisialisasi variabel message
+    for char in cipher:
+        if char.isalpha():  # jika karakter saat ini adalah alfabet
+            message += chr((ord(char) - 65 - key) % 26 + 65)  # tambahkan karakter yang telah didekripsi ke variabel message
+        else:  # jika karakter saat ini bukan alfabet
+            message += char  # tambahkan karakter asli ke variabel message
+    return message
+
+# Fungsi utama
 def main():
-    text = input("Masukkan teks: ")
+    message = input('Masukkan pesan: ')  # input pesan
     # NIM L200204219
     # Menggunakan shift 19, dikarenakan 2 Digit terakhir NIM saya adalah 19
-    shift = 19
-    print("Hasil enkripsi: ", shift_cipher(text, shift))
+    key = 19  # inisialisasi variabel key
+    cipher = encrypt(message, key)  # enkripsi pesan
+    print('Pesan yang telah dienkripsi: ', cipher)  # cetak pesan yang telah dienkripsi
+    print('Pesan yang telah didekripsi: ', decrypt(cipher, key))  # cetak pesan yang telah didekripsi
 
-# Main
-if __name__ == "__main__":
+# Panggil fungsi utama
+if __name__ == '__main__': 
     main()
-

@@ -1,54 +1,57 @@
 # Description : Transposition Cipher
 
-def transposition_cipher(text, key):
-    # Membuat list untuk menyimpan hasil enkripsi
-    result = []
-    # Membuat list untuk menyimpan nilai ASCII dari plaintext
-    plaintext_ascii = []
-    # Membuat list untuk menyimpan nilai ASCII dari hasil enkripsi
-    result_ascii = []
-    # Membuat list untuk menyimpan nilai ASCII dari key
-    key_ascii = []
-    # Membuat list untuk menyimpan nilai ASCII dari key yang sudah diurutkan
-    sorted_key_ascii = []
-    # Membuat list untuk menyimpan index dari key yang sudah diurutkan
-    sorted_key_index = []
-    # Membuat list untuk menyimpan nilai ASCII dari hasil enkripsi yang sudah diurutkan
-    sorted_result_ascii = []
-    # Mengubah plaintext dan key menjadi list of ASCII code
-    for char in text:
-        plaintext_ascii.append(ord(char))
-    for char in key:
-        key_ascii.append(ord(char))
-    # Mengurutkan key
-    sorted_key_ascii = sorted(key_ascii)
-    # Mencari index dari key yang sudah diurutkan
-    for i in range(len(sorted_key_ascii)):
-        sorted_key_index.append(key_ascii.index(sorted_key_ascii[i]))
-    # Melakukan enkripsi dengan rumus Transposition Cipher
-    for i in range(len(plaintext_ascii)):
-        # Mengubah nilai ASCII plaintext menjadi nilai 0-25
-        plaintext_ascii[i] -= 65
-        # Melakukan operasi enkripsi
-        result_ascii.append((plaintext_ascii[i] + key_ascii[i]) % 26)
-        # Mengubah nilai ASCII hasil enkripsi menjadi nilai 65-90
-        result_ascii[i] += 65
-    # Mengurutkan hasil enkripsi berdasarkan index key yang sudah diurutkan
-    for i in range(len(sorted_key_index)):
-        sorted_result_ascii.append(result_ascii[sorted_key_index[i]])
-    # Mengubah nilai ASCII hasil enkripsi menjadi karakter
-    for i in range(len(sorted_result_ascii)):
-        result.append(chr(sorted_result_ascii[i]))
-    # Menggabungkan list hasil enkripsi menjadi string
-    result = ''.join(result)
-    return result
+# Fungsi untuk mengenkripsi pesan dengan algoritma transposition cipher
+def encrypt(plaintext, key):
+    # Hitung panjang kunci
+    key_len = len(key)
+    # Hitung jumlah kolom matriks berdasarkan panjang kunci
+    num_cols = key_len
+    # Hitung jumlah baris matriks berdasarkan panjang pesan
+    num_rows = len(plaintext) // num_cols
+    if len(plaintext) % num_cols > 0: # Jika jumlah karakter pesan tidak habis dibagi dengan jumlah kolom
+        num_rows += 1 # Tambahkan jumlah baris matriks
+    # Tambahkan karakter padding jika jumlah karakter pesan tidak habis dibagi dengan jumlah kolom
+    plaintext += (num_rows * num_cols - len(plaintext)) * '*'
+    # Buat matriks berdasarkan jumlah baris dan kolom
+    matrix = [list(plaintext[i:i+num_cols]) for i in range(0, num_rows*num_cols, num_cols)]
+    # Inisialisasi variabel yang akan menampung pesan terenkripsi
+    ciphertext = ''
+    # Enkripsi pesan dengan menukar posisi kolom matriks sesuai urutan kunci
+    for col in key: # Untuk setiap karakter pada kunci
+        col_index = key.index(col) # Dapatkan indeks karakter pada kunci
+        for row in matrix: # Untuk setiap baris matriks
+            ciphertext += row[col_index] # Tambahkan karakter pada kolom matriks ke variabel ciphertext
 
-# Driver code
+    return ciphertext
+
+# Fungsi untuk mendekripsi pesan yang telah dienkripsi dengan algoritma transposition cipher
+def decrypt(ciphertext, key):
+    # Hitung panjang kunci
+    key_len = len(key)
+    # Hitung jumlah kolom matriks berdasarkan panjang kunci
+    num_cols = key_len
+    # Hitung jumlah baris matriks berdasarkan panjang pesan terenkripsi
+    num_rows = len(ciphertext) // num_cols
+    # Buat matriks berdasarkan jumlah baris dan kolom
+    matrix = [list(ciphertext[i:i+num_cols]) for i in range(0, num_rows*num_cols, num_cols)]
+    # Inisialisasi variabel yang akan menampung pesan terdekripsi
+    plaintext = ''
+    # Dekripsi pesan dengan memindahkan karakter pada kolom matriks sesuai urutan kunci ke setiap baris matriks
+    for row in matrix: # Untuk setiap baris matriks
+        for col in key: # Untuk setiap karakter pada kunci
+            col_index = key.index(col) # Dapatkan indeks karakter pada kunci
+            plaintext += row[col_index] # Tambahkan karakter pada kolom matriks ke variabel plaintext
+
+    return plaintext
+
+# Fungsi utama
 def main():
-    text = input('Masukkan teks: ')
-    key = input('Masukkan key: ')
-    print('Hasil enkripsi: ', transposition_cipher(text, key))
+    plaintext = input('Masukkan teks: ')  # Input teks
+    key = input('Masukkan key: ')  # Input key
+    ciphertext = encrypt(plaintext, key)  # Enkripsi teks
+    print('Teks yang telah dienkripsi: ', ciphertext)  # Cetak teks yang telah dienkripsi
+    print('Teks yang telah didekripsi: ', decrypt(ciphertext, key))  # Cetak teks yang telah didekripsi
 
-# Main
+# Panggil fungsi utama
 if __name__ == '__main__':
     main()
