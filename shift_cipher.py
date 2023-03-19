@@ -4,9 +4,11 @@
 def encrypt(message, key):
     cipher = ''  # inisialisasi variabel cipher
     for char in message:
-        if char.isalpha():  # jika karakter saat ini adalah alfabet
+        if char.isupper():  # jika karakter saat ini adalah huruf kapital
             cipher += chr((ord(char) - 65 + key) % 26 + 65)  # tambahkan karakter yang telah dienkripsi ke variabel cipher
-        else:  # jika karakter saat ini bukan alfabet
+        elif char.islower():  # jika karakter saat ini adalah huruf kecil
+            cipher += chr((ord(char) - 97 + key) % 26 + 97)  # tambahkan karakter yang telah dienkripsi ke variabel cipher
+        else:  # jika karakter saat ini bukan huruf
             cipher += char  # tambahkan karakter asli ke variabel cipher
     return cipher
 
@@ -14,9 +16,11 @@ def encrypt(message, key):
 def decrypt(cipher, key):
     message = ''  # inisialisasi variabel message
     for char in cipher:
-        if char.isalpha():  # jika karakter saat ini adalah alfabet
+        if char.isupper():  # jika karakter saat ini adalah huruf kapital
             message += chr((ord(char) - 65 - key) % 26 + 65)  # tambahkan karakter yang telah didekripsi ke variabel message
-        else:  # jika karakter saat ini bukan alfabet
+        elif char.islower():  # jika karakter saat ini adalah huruf kecil
+            message += chr((ord(char) - 97 - key) % 26 + 97)  # tambahkan karakter yang telah didekripsi ke variabel message
+        else:  # jika karakter saat ini bukan huruf
             message += char  # tambahkan karakter asli ke variabel message
     return message
 
